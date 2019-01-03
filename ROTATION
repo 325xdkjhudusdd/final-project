@@ -1,0 +1,151 @@
+void my_up()
+{
+	int i, j;
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 4; j++)
+		{
+			tem[i][j] = BLOCK[i][j];
+
+			if (1 == BLOCK[i][j])
+			{
+				gotoxy(point_x + j * 2, point_y + i);
+
+				printf(" ");
+			}
+		}
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 4; j++)
+		{
+			BLOCK[j][3 - i] = tem[i][j];
+		}
+	}
+
+	//以上為旋轉。
+
+	//下面為防止旋轉後超出框架範圍
+
+	for (j = 0; j < 2; j++)
+	{
+		for (i = 0; i < 4; i++)
+		{
+			if (1 == BLOCK[i][j] && point_x < 2)
+			{
+				point_x += 2;
+			}
+			else if (1 == BLOCK[i][3 - j] && point_x > 24)
+			{
+				point_x -= 2;
+			}
+		}
+	}
+	my_printblock();//旋轉之後立即顯示出來
+}
+
+//左移
+
+void my_lift()
+{
+	int i, j;
+
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 4; j++)
+		{
+			if (1 == BLOCK[j][i] && (point_x + 2 * i - 1 < 2 || 1 == scope[point_x / 2 + i - 1][point_y + j]))
+			{
+				return;//如果到邊緣 或者是左邊已經有了方塊
+			}
+		}
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 4; j++)
+            if (1 == BLOCK[i][j])
+			{
+
+				gotoxy(point_x + j * 2, point_y + i);
+
+				printf(" ");//把之前的擦掉
+			}
+    point_x -= 2;
+    my_printblock();
+}
+
+//右移
+
+void my_right()
+{
+	int i, j;
+
+	for (i = 3; i > 0; i--)
+		for (j = 0; j < 4; j++)
+		{
+			if (1 == BLOCK[j][i] && (point_x + 2 * i + 2 > 30 || 1 == scope[point_x / 2 + i + 1][point_y + j]))
+			{
+				return;//如果到邊緣 或者是右邊已經有了方塊
+			}
+		}
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 4; j++)
+			if (1 == BLOCK[i][j])
+			{
+				gotoxy(point_x + j * 2, point_y + i);
+				printf(" ");//把之前的擦掉
+			}
+	point_x += 2;
+	my_printblock();
+}
+
+//下降
+
+void my_down()
+{
+	int i, j;
+
+	if (true == check)
+	{
+		return;//不能下落直接不執行
+	}
+
+	gotoxy(point_x, point_y);
+
+	for (i = 3; i > 0; i--)//檢測該方格還能不能下落
+		for (j = 0; j < 4; j++)
+			if (1 == BLOCK[i][j])
+			{
+				if (1 == scope[point_x / 2 + j][point_y + i + 1] || point_y + i + 1 > 28) //到最下邊或是下面已經有方格
+				{
+					check = true;
+					return;
+				}
+			}
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 4; j++)
+			if (1 == BLOCK[i][j])
+			{
+				gotoxy(point_x + j * 2, point_y + i);
+				printf(" ");//能下落，擦除以前的方格
+			}
+	point_y++;
+    my_printblock();//在下一格顯示
+}
+
+//暫停
+
+void my_stop()
+{
+	int i;
+	i = 0;
+	while (i!=32)
+	{
+		i = _getch();
+		if (i == 27)
+		{
+			exit(0);
+		}
+	}
+}
