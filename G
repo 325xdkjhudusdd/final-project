@@ -1,0 +1,87 @@
+void console()
+{
+
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);// 獲取標準輸出設備句柄
+
+	CONSOLE_SCREEN_BUFFER_INFO bInfo; // 窗口緩衝區信息
+
+	GetConsoleScreenBufferInfo(hOut, &bInfo);// 獲取窗口緩衝區信息
+
+	SetConsoleTitle("俄羅斯方塊 C版"); // 設置窗口的標題
+
+	COORD size = { 80, 30 };//不能小於默認大小（80，25）
+
+	SetConsoleScreenBufferSize(hOut, size); // 重新設置緩衝區大小*/
+
+	SMALL_RECT rc = { 0,0, 63, 29 }; //不能大於緩衝區大小
+
+	SetConsoleWindowInfo(hOut, true, &rc);// 重置窗口大小
+}
+
+//右表功能列印和背框
+
+void my_print()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+
+	for (int i = 1; i < 30; i++)
+
+		printf("■\t\t\t\t■ | |\n");
+
+	printf("■■■■■■■■■■■■■■■■■ |---------------------------|\n");
+
+	gotoxy(36, 0);
+
+	printf("---------------------------");
+
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+
+	gotoxy(40, 3);
+
+	printf("分 數： %d", fen);
+
+	gotoxy(40, 8);
+
+	printf("操作方法：");
+
+	gotoxy(42, 10);
+
+	printf("↑：旋轉 ↓：沉澱");
+
+	gotoxy(42, 12);
+
+	printf("→：右移 ←：左移");
+
+	gotoxy(43, 14);
+
+	printf("空格鍵：開始 / 暫停");
+
+	gotoxy(42, 16);
+
+	printf(" Esc：退出");
+
+	gotoxy(40, 22);
+
+	printf("關 於：");
+
+	gotoxy(43, 24);
+
+	printf("NO hint 俄羅斯方塊 ");
+}
+
+//設置光標輸出的位置函數。坐標不能為負數
+
+void gotoxy(int x, int y)
+{
+	HANDLE app;
+
+	COORD pos;
+
+	pos.X = x;
+
+	pos.Y = y;
+
+	app = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleCursorPosition(app, pos);
+}
